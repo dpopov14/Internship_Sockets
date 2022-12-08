@@ -13,6 +13,8 @@ public class Client {
     private PrintWriter out;
     public String username;
 
+    /** @param clientSocket - for connecting with the server
+     * @param username - for distinguishing the clients */
     public Client(Socket clientSocket, String username) {
         this.clientSocket = clientSocket;
         this.username = username;
@@ -38,6 +40,10 @@ public class Client {
         }
     }
 
+    /** Used for listening for incoming messages on the Client's side
+     *  Also is concurrently running, but here it is done directly in the method instead of
+     *  implementing Runnable
+     * */
     public void listenForMessage(){
         new Thread(new Runnable() {
             @Override
@@ -62,6 +68,8 @@ public class Client {
         }).start(); //We are running the thread immediately
     }
 
+
+    /** Closes all relevant information channels */
     private void closeEverything(Socket clientSocket, BufferedReader in, PrintWriter out) {
         try {
             if(in != null){
@@ -78,6 +86,10 @@ public class Client {
         }
     }
 
+    /** Initializer for the Client. At this stage it only requires a username
+     * @TODO: add port argument
+     * @TODO: add a TUI
+     * */
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter you username for the groupchat: ");

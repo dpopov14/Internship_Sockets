@@ -63,7 +63,7 @@ public class Server {
 
     }
 
-
+    /** Methods that handles stopping the server */
     public void closeServerSocket(){
         try{
             if(serverSocket != null){
@@ -74,6 +74,10 @@ public class Server {
         }
     }
 
+    /** Initializer for the server when the program is run
+     * @TODO: Add a port parameter
+     * @TODO: Add a TUI
+     * */
     public static void main(String[] args) throws IOException {
 
         /** Create a new server socket that will be listening for connections from clients on the specified port */

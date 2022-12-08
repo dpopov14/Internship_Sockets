@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ClientHandler implements Runnable {
 
 
-    /** This keeps track of all our clients - this is why it is inside the class definition -
+    /** Keeps track of all our clients - this is why it is inside the class definition -
      * since it is a static property, it will be accessible through all instances
      */
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
@@ -19,7 +19,7 @@ public class ClientHandler implements Runnable {
     private Socket clientSocket;
     //Read messages that will be sent by the client
     private BufferedReader in;
-    //Send messages
+    //Send messages that will be sent to other clients
     private PrintWriter out;
 
     private String clientUsername;
@@ -44,11 +44,13 @@ public class ClientHandler implements Runnable {
     }
 
 
+    /** Listening functionality for when the handler is running*/
     @Override
     public void run() {
         //What we will on a separate thread: listen for messages
         String messageFromClient;
 
+        //As long as the Handler is runnign, try to read incoming messages. Sending messages is implemented in @broadcastMessage()
         while(!clientSocket.isClosed()){
             try {
                 messageFromClient = in.readLine();
@@ -60,6 +62,8 @@ public class ClientHandler implements Runnable {
         }
     }
 
+
+    /** Broadcast a message to all connected clients */
     public void broadcastMessage(String messageToSend){
         for(ClientHandler clientHandler : clientHandlers){
             try {
@@ -76,11 +80,15 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /** Removes the current handler from the list of handlers.
+     * DOES NOT CLOSE THE COMMUNICATION CHANNELS! Complementary method to closeEverything() */
     public void removeClientHandler(){
         clientHandlers.remove(this);
         broadcastMessage("SERVER: " + clientUsername + "has left the chat!");
     }
 
+
+    /** Closes all connections to the corresponding client */
     public void closeEverything(Socket clientSocket, BufferedReader in, PrintWriter out){
         removeClientHandler();
         try {
