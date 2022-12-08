@@ -7,6 +7,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * Server implementation
+ * This is the structure of the Application:
+ *
+ * Initially the client makes the connection to the server:
+ *
+ *            [Client]----------------------------[Server]
+ *      Trying to connect to port x         listening in port x
+ *
+ * Once connected, the server creates a ClientHandler, which is used to communicate with the client from then on. In this implementation, the Server is only used to establish the connection with the client.
+ * Once this happens, the server passes the socket for communication with the client to the respective ClientHandler and the ClientHandler handles communication with that Client
+ *
+          ______________         (out)___________(in)
+         |    Client    | ------|                    |-------[ClientHandler]
+         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯         (in)¯¯¯¯¯¯¯¯¯¯¯(out)
+ *
+ * The ClientHandler broadcastMessage method goes through the list of handlers and uses them to distribute the message to all clients
+ * In a way, the Server is acting as a manager that appoints ClientHandlers to Clients, serving no further role.
+ * The ClientHandlers, the server's "minions" are doing the heavy lifting when it comes to message distribution.
+ */
+
 public class Server {
     private ServerSocket serverSocket;
     /** List of ClientHandlers, one for each connected client. */
@@ -17,6 +38,8 @@ public class Server {
         this.serverSocket = serverSocket;
         clientHandlers = new ArrayList<>();
     }
+
+
 
 
     /** Methods that handles all logic related to starting the server and establishing a connection with a client if need be. */
